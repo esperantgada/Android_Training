@@ -8,4 +8,5 @@
     <string name="calculate">CALCULATE</string>
     <string name="tip_amount">Tip Amount : %s</string>
     <string name="round_up">Round up tip?</string>
+    <string name="roundup">RoundUp</string>
 </resources>
