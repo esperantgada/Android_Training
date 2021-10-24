@@ -1,18 +1,18 @@
 package com.example.tiptime
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tiptime.databinding.ActivityMainBinding
 import java.text.NumberFormat
 import kotlin.math.ceil
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,10 +22,15 @@ class MainActivity : AppCompatActivity() {
         binding.calculateButton.setOnClickListener { calculateTip() }
 
         /**Hide the keyboard**/
-        binding.costOfServiceEditText.setOnKeyListener{view, keyCode, _ -> handleKeyEvent(view, keyCode)}
+        binding.costOfServiceEditText.setOnKeyListener { view, keyCode, _ ->
+            handleKeyEvent(
+                view,
+                keyCode
+            )
+        }
     }
 
-    private fun calculateTip(){
+    private fun calculateTip() {
         val stringInTextField = binding.costOfServiceEditText.text.toString()
         val cost = stringInTextField.toDoubleOrNull()
 
@@ -35,19 +40,21 @@ class MainActivity : AppCompatActivity() {
             else -> 0.15
         }
 
-        if (cost == null || cost == 0.0){
+        if (cost == null || cost == 0.0) {
             //binding.tipResult.text = ""
             displayResult(0.0)
-            return    /**If cost is null or 0,display 0 and leave the method without executing the other instructions**/
+            return
+            /**If cost is null or 0,display 0 and leave the method without executing the other instructions**/
         }
 
 
         var result = tipPercentage * cost
-        val roundUp = binding.roundUpSwitch.isChecked /**Return a Boolean after checking the state of switch**/
+        val roundUp = binding.roundUpSwitch.isChecked
+        /**Return a Boolean after checking the state of switch**/
         //result = ceil(result) /**Conversion of the result**/
 
         /**If switch is turned on, perform this action**/
-        if (roundUp){
+        if (roundUp) {
             result = ceil(result)
         }
 
@@ -56,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
     /**Add this in string resource: <string name="tip_amount">Tip Amount: %s</string>**/
 
-     fun displayResult(result: Double) {
+    fun displayResult(result: Double) {
         /**Format the result**/
         val formattedResult = NumberFormat.getCurrencyInstance().format(result)
         binding.tipResult.text = getString(R.string.tip_amount, formattedResult)
