@@ -13,6 +13,7 @@ import kotlin.math.ceil
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.calculateButton.setOnClickListener { calculateTip() }
 
-        /**Hide the keyboard**/
+        // Set up a key listener on the EditText field to listen for "enter" button presses
         binding.costOfServiceEditText.setOnKeyListener { view, keyCode, _ ->
             handleKeyEvent(
                 view,
@@ -34,34 +35,46 @@ class MainActivity : AppCompatActivity() {
         val stringInTextField = binding.costOfServiceEditText.text.toString()
         val cost = stringInTextField.toDoubleOrNull()
 
-        val tipPercentage = when (binding.tipOptions.checkedRadioButtonId) {
-            R.id.twenty -> 0.20
-            R.id.eighteen -> 0.18
-            else -> 0.15
+        when (binding.tipOptions.checkedRadioButtonId) {
+            R.id.twenty -> {
+                showResult(0.20)}
+
+            R.id.eighteen -> {
+                showResult(0.18)}
+
+            else -> {
+                showResult(0.15)
+            }
         }
+
+        /**If cost is null or 0,display 0 and leave the method without executing the other instructions**/
 
         if (cost == null || cost == 0.0) {
-            //binding.tipResult.text = ""
             displayResult(0.0)
             return
-            /**If cost is null or 0,display 0 and leave the method without executing the other instructions**/
         }
 
+    }
 
-        var result = tipPercentage * cost
+    private fun checkAmount() {
+        if (binding.tipResult.text.isNotEmpty()){
+            binding.tipResult.text = ""
+        }
+    }
+
+    private fun showResult(d: Double){
+        val stringInTextField = binding.costOfServiceEditText.text.toString()
+        val cost = stringInTextField.toDoubleOrNull()
+        var result = d * cost!!
         val roundUp = binding.roundUpSwitch.isChecked
-        /**Return a Boolean after checking the state of switch**/
-        //result = ceil(result) /**Conversion of the result**/
 
         /**If switch is turned on, perform this action**/
         if (roundUp) {
-            result = ceil(result)
+            result = kotlin.math.ceil(result)
         }
 
         displayResult(result)
     }
-
-    /**Add this in string resource: <string name="tip_amount">Tip Amount: %s</string>**/
 
     fun displayResult(result: Double) {
         /**Format the result**/
@@ -72,7 +85,6 @@ class MainActivity : AppCompatActivity() {
     /**Hide the keyboard**/
     private fun handleKeyEvent(view: View, keyCode: Int): Boolean {
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            // Hide the keyboard
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
